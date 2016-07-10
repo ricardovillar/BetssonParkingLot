@@ -1,0 +1,8 @@
+packages/*
+.vs/*
+ParkingLog.Tests/bin/*
+ParkingLog.Tests/obj/*
+ParkingLot.Site.Tests/bin/*
+ParkingLot.Site.Tests/obj/*
+ParkingLot.Site/bin/*
+ParkingLot.Site/obj/*
