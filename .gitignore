@@ -1,8 +1,8 @@
 packages/*
 .vs/*
-ParkingLog.Tests/bin/*
-ParkingLog.Tests/obj/*
-ParkingLot.Site.Tests/bin/*
-ParkingLot.Site.Tests/obj/*
-ParkingLot.Site/bin/*
-ParkingLot.Site/obj/*
+ParkingLog.Web.Tests/bin/*
+ParkingLog.Web.Tests/obj/*
+ParkingLot.Web.Tests/bin/*
+ParkingLot.Web.Tests/obj/*
+ParkingLot.Web/bin/*
+ParkingLot.Web/obj/*

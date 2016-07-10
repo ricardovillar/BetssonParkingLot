@@ -1,0 +1,43 @@
+﻿
+<div style="display: block">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Get Data</a></li>
+                    <li><a href="#">All Time</a></li>
+                    <li><a href="#">Select Parking Lot</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="interval-range">
+    <span class="interval-range-label">Select time range for analysis:</span>
+    <input id="startTime" type="text" class="timepicker" name="time" placeholder="Start time" />
+    <input id="endTime" type="text" class="timepicker" name="time" placeholder="End time" />
+</div>
+
+<canvas class="usage-chart"></canvas>
+
+<span class="max-usage-description">
+    <label>Max Cars:</label>
+    <label id="max-cars-label"></label>
+</span>
+
+<span class="max-usage-description">
+    <label>at time:</label>
+    <label id="max-cars-time-label">HH:MM</label>
+</span>
+
+@section scripts { 
+    @Scripts.Render("~/Scripts/app/home/index.js")
+}
