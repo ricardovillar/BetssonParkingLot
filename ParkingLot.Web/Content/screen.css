@@ -9,17 +9,16 @@
 
 	.timepicker {
 		width: 100px;
-		margin: 10px 5px;
+		margin: 10px 15px;
 	}
 
 	.interval-range {
 		margin-right: 10%;
 		width: 20%;
-		text-align: center;
 	}
 
 	.interval-range-label {
-		display: inline-block;
+		display: block;
 		text-align: left;
 		margin-left: 15px;
 	}
