@@ -9,16 +9,22 @@
     var buildChart = function (req) {
 
         var data = req.Data.map(function (chartPoint) {
-            return { x: chartPoint.Date, y: chartPoint.Cars };
+            return chartPoint.Cars;
         });
 
-        var ctx = $("#occupation-chart");
+        var labels = req.Data.map(function (chartPoint) {
+            return chartPoint.Date;
+        });
+
+
+        var ctx = $("#parking-chart");
+    
         var occupationChart = new Chart(ctx, {
             type: 'line',
             responsive: false,
             data: {
-                datasets: [{
-                    label: "My First dataset",
+                labels: labels,
+                datasets: [{                    
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: "rgba(75,192,192,0.4)",
@@ -38,21 +44,13 @@
                     pointHitRadius: 10,
                     data: data
                 }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'linear',
-                        position: 'bottom'
-                    }]
-                }
             }
         });
 
     }
 
     $.ajax({
-        url: '/Home/GetData',
+        url: '/Home/GetData?url=http://parkingapi.gear.host/v1/parking',
         success: buildChart
     });
 

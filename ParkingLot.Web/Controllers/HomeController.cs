@@ -6,17 +6,18 @@ using Newtonsoft.Json;
 using ParkingLot.Web.Data;
 using ParkingLot.Web.Models;
 
+
 namespace ParkingLot.Web.Controllers {
-    public class HomeController : Controller {
+    public class HomeController : BaseController {
         public ActionResult Index() {
             return View();
         }
 
-        public JsonResult GetData(string url = "http://parkingapi.gear.host/v1/parking") {
+        public ContentResult GetData(string url = "http://parkingapi.gear.host/v1/parking?days=60&items=200000") {
             var jsonData = RequestData(url);
             var records = JsonConvert.DeserializeObject<List<ParkingRecord>>(jsonData);
-            var chartData = new ChartDataBuilder().Build(records);
-            return Json(chartData, JsonRequestBehavior.AllowGet);
+            var chartData = new ChartDataBuilder().Build(records);           
+            return CreateLargeJsonResponse(chartData);
         }
 
 
