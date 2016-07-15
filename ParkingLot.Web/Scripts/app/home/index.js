@@ -5,27 +5,39 @@
         });
     });
 
+    $('#getData').on('click', getData);
+    $('#plotAllTimeData').on('click', plotAllTimeData);
 
-    var buildChart = function (req) {
+    function getData() {
+        var apiUrl = $("#apiUrl").val();
+        $.ajax({
+            url: '/Home/GetData?apiUrl=' + apiUrl,
+            success: buildChart
+        });
+    }
 
+    function plotAllTimeData() {
+        $.ajax({
+            url: '/Home/GetAllTimeData',
+            success: buildChart
+        });
+        return true;
+    }
+
+    function buildChart(req) {
         var data = req.Data.map(function (chartPoint) {
             return chartPoint.Cars;
         });
-
         var labels = req.Data.map(function (chartPoint) {
-            return chartPoint.Date;
+            return toJsDate(chartPoint.Date).toLocaleString();
         });
-
-
         var ctx = $("#parking-chart");
-    
         var occupationChart = new Chart(ctx, {
             type: 'line',
             responsive: false,
             data: {
                 labels: labels,
-                datasets: [{                    
-                    fill: false,
+                datasets: [{
                     lineTension: 0.1,
                     backgroundColor: "rgba(75,192,192,0.4)",
                     borderColor: "rgba(75,192,192,1)",
@@ -46,15 +58,16 @@
                 }]
             }
         });
-
     }
 
-    $.ajax({
-        url: '/Home/GetData?url=http://parkingapi.gear.host/v1/parking',
-        success: buildChart
-    });
+    function toJsDate(date) {
+        var d = /\/Date\((\d*)\)\//.exec(date);
+        return new Date(+d[1]);
+    }
+
 
 })(jQuery);
+
 
 
 

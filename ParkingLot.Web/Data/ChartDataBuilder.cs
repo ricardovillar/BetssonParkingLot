@@ -12,19 +12,14 @@ namespace ParkingLot.Web.Data {
             var points = parkData
                             .Where(d => d.Value >= 0)
                             .OrderBy(d => d.Key)
-                            .Select(d => new ChartPoint { Date = d.Key.ToString("dd/MM/yyyy HH:mm:ss"), Cars = d.Value })
+                            .Select(d => new ChartPoint { Date = d.Key, Cars = d.Value })
+                            .Distinct()
                             .ToList();
 
             var topOcuppationCars = parkData.Values.Max();
             var topOccupationTime = parkData.First(x => x.Value == topOcuppationCars).Key;
 
-            return new ChartData {
-                StartDate = parkData.Keys.Min().ToString("dd/MM/yyyy HH:mm:ss"),
-                EndDate = parkData.Keys.Max().ToString("dd/MM/yyyy HH:mm:ss"),
-                MaxOccupation = topOcuppationCars,
-                TopOccupationTime = topOccupationTime.TimeOfDay,
-                Data = points
-            };
+            return new ChartData(points);
         }        
 
         private IDictionary<DateTime, int> MapRecordsToMinutes(IEnumerable<ParkingRecord> records) {
