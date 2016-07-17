@@ -1,68 +1,66 @@
-﻿@using System.Configuration;
-<div style="display: block">
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+﻿@using ParkingLot.Web.Extensions;
+@model ParkingLot.Web.Models.Config
+<div ng-controller="HomeController as home" ng-init="init(@Model.ToJson())">
+    <div style="display: block">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#" data-toggle="modal" data-target="#getDataModal">Get Data</a></li>
+                        <li><a href="#" id="plotAllTimeData">All Time</a></li>
+                        <li><a href="#">Select Parking Lot</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li><a href="#" data-toggle="modal" data-target="#getDataModal">Get Data</a></li>
-                    <li><a href="#" id="plotAllTimeData">All Time</a></li>
-                    <li><a href="#">Select Parking Lot</a></li>
-                </ul>
+        </nav>
+    </div>
+
+    <div class="interval-range">
+        <span class="interval-range-label">Select time range for analysis:</span>
+        <input id="startTime" type="text" class="timepicker" name="time" placeholder="Start time" />
+        <input id="endTime" type="text" class="timepicker" name="time" placeholder="End time" />
+    </div>
+
+    <canvas id="parking-chart" class="usage-chart"></canvas>
+
+    <span class="max-usage-description">
+        <label>Max Cars:</label>
+        <span ng-bind="home.data.maxOccupationRate"></span>
+    </span>
+
+    <span class="max-usage-description">
+        <label>at time:</label>
+        <span ng-bind="home.data.maxOccupationDate"></span>
+    </span>
+
+    <div class="modal fade" id="getDataModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">API Url</h4>
+                </div>
+                <div class="modal-body">
+                    <span>
+                        <input type="text" ng-model="home.urls.api" class="col-md-12"/>
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="home.getData()" >Get Data</button>
+                </div>
             </div>
         </div>
-    </nav>
-</div>
-
-<div class="interval-range">
-    <span class="interval-range-label">Select time range for analysis:</span>
-    <input id="startTime" type="text" class="timepicker" name="time" placeholder="Start time" />
-    <input id="endTime" type="text" class="timepicker" name="time" placeholder="End time" />
-</div>
-
-<canvas id="parking-chart" class="usage-chart"></canvas>
-
-<span class="max-usage-description">
-    <label>Max Cars:</label>
-    <label id="max-cars-label"></label>
-</span>
-
-<span class="max-usage-description">
-    <label>at time:</label>
-    <label id="max-cars-time-label">HH:MM</label>
-</span>
-
-<!-- Modal -->
-<div class="modal fade" id="getDataModal" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">API Url</h4>
-            </div>
-            <div class="modal-body">
-                <span>
-                    <input type="text" id="apiUrl" class="col-md-12" value="@ConfigurationManager.AppSettings["ApiUrl"]"/>
-                </span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" id="getData" class="btn btn-default" data-dismiss="modal">Get Data</button>
-            </div>
-        </div>
-
     </div>
 </div>
 
 @section scripts { 
     @Scripts.Render("~/bundles/chart")
-    @Scripts.Render("~/Scripts/app/home/index.js")
 }
