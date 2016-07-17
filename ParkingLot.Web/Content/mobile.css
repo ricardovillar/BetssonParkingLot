@@ -23,10 +23,10 @@
 }
 
 .usage-chart {
-	border: solid 1px black;
-	width: 80%;
-	margin: 10%;
-	min-height: 200px;
+    max-width: 90%;
+    margin: 1% 5%;
+	min-height: 400px;
+	padding-top: 10px;
 }
 
 .max-usage-description {

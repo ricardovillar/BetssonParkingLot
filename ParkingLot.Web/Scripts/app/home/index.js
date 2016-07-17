@@ -11,7 +11,7 @@
     function getData() {
         var apiUrl = $("#apiUrl").val();
         $.ajax({
-            url: '/Home/GetData?apiUrl=' + apiUrl,
+            url: '/betsson/Home/GetData?apiUrl=' + apiUrl,
             success: buildChart
         });
     }
@@ -25,12 +25,14 @@
     }
 
     function buildChart(req) {
+        Chart.defaults.global.defaultFontSize = defineFontSize();
         var data = req.Data.map(function (chartPoint) {
             return chartPoint.Cars;
         });
         var labels = req.Data.map(function (chartPoint) {
             return toJsDate(chartPoint.Date).toLocaleString();
         });
+        //var fontSize = defineFontSize();
         var ctx = $("#parking-chart");
         var occupationChart = new Chart(ctx, {
             type: 'line',
@@ -56,6 +58,11 @@
                     pointHitRadius: 10,
                     data: data
                 }]
+            },
+            options: {
+                legend: {
+                    display: false
+                }
             }
         });
     }
@@ -65,6 +72,14 @@
         return new Date(+d[1]);
     }
 
+    function defineFontSize() {
+        var mq = window.matchMedia("(min-width: 48em)");
+        if (mq.matches) {
+            return 12;
+        } else {
+            return 6;
+        }
+    }
 
 })(jQuery);
 

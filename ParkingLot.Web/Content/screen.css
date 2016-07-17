@@ -33,11 +33,12 @@
 		}
 
 	.usage-chart {
+		border: solid 1px black;
 		width: 60%;
 		min-height: 400px;
 		margin: 0 0 0 10%;
 		float: left;
-		max-width: 60%;
+		max-width: 60%;		
 	}
 
 	.max-usage-description {
