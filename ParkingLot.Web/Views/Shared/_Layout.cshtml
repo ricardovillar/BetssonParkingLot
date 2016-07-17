@@ -1,18 +1,19 @@
 ﻿<!DOCTYPE html>
-<html ng-app>
+<html ng-app="ParkingLotApp">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Betsson Parking Lot</title>
-    @Scripts.Render("~/bundles/angular")
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/css")
 </head>
-<body ng-controller="ParkingLotController as app"> 
+<body> 
     @RenderBody()
 
-    @*@Scripts.Render("~/bundles/jquery")*@
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/bundles/ParkingLotApp")    
 
     @RenderSection("scripts", required: false)
 </body>

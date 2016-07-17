@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using ParkingLot.Web.Data;
 using ParkingLot.Web.Models;
-
+using ParkingLot.Web.Extensions;
 
 namespace ParkingLot.Web.Controllers {
     public class HomeController : BaseController {
@@ -20,7 +21,13 @@ namespace ParkingLot.Web.Controllers {
         }
 
         public ActionResult Index() {
-            return View();
+            var config = new Config {
+                ApiUrl = ConfigurationManager.AppSettings["ApiUrl"],
+                GetDataUrl = Url.Action("GetData", "Home", new {  apiUrl = "(apiUrl)" }),
+                GetPartialDataUrl = Url.Action("GetPartialData", "Home", new { start = "(start)", end = "(end)" }),
+                GetFullDataUrl = Url.Action("GetFullData")
+            };
+            return View(config);
         }
 
         public ContentResult GetData(string apiUrl) {
@@ -38,7 +45,7 @@ namespace ParkingLot.Web.Controllers {
             return CreateLargeJsonResponse(partialChartData);
         }
         
-        public ContentResult GetAllTimeData() {
+        public ContentResult GetFullData() {
             var chartData = GetStoredChartData();
             return CreateLargeJsonResponse(chartData);
         }

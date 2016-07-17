@@ -6,8 +6,8 @@ namespace ParkingLot.Web.Models {
     public class ChartData {
         public DateTime? StartDate { get; private set; }
         public DateTime? EndDate { get; private set; }
-        public TimeSpan? TopOccupationTime { get; private set; }
-        public int MaxOccupation { get; private set; }
+        public DateTime? MaxOccupationDate { get; private set; }
+        public int MaxOccupationRate { get; private set; }
         public IEnumerable<ChartPoint> Data { get; private set; }
 
         public ChartData(IEnumerable<ChartPoint> data) {
@@ -15,8 +15,8 @@ namespace ParkingLot.Web.Models {
             if (data.Any()) {
                 StartDate = Data.Min(d => d.Date);
                 EndDate = Data.Max(d => d.Date);
-                MaxOccupation = Data.Max(d => d.Cars);
-                TopOccupationTime = Data.Where(d => d.Cars == MaxOccupation).First().Date.TimeOfDay;
+                MaxOccupationRate = Data.Max(d => d.Cars);
+                MaxOccupationDate = Data.Where(d => d.Cars == MaxOccupationRate).First().Date;
             }
         }
 

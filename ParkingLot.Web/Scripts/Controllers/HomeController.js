@@ -1,39 +1,40 @@
-﻿(function ($) {
-    $(function () {
-        $('input.timepicker').timepicker({
-            interval: 30
-        });
-    });
+﻿var HomeController = function ($scope, $http) {
+    var home = this;
 
-    $('#getData').on('click', getData);
-    $('#plotAllTimeData').on('click', plotAllTimeData);
+    $scope.init = function (config) {
+        home.urls = {
+            api: config.ApiUrl,
+            getData: decodeURI(config.GetDataUrl),
+            getPartialData: decodeURI(config.GetPartialDataUrl),
+            getFullData: config.GetFullDataUrl,
+        };
+    };
 
-    function getData() {
-        var apiUrl = $("#apiUrl").val();
-        $.ajax({
-            url: '/betsson/Home/GetData?apiUrl=' + apiUrl,
-            success: buildChart
-        });
+    home.data = {
+        maxOccupationRate: "N/A",
+        maxOccupationDate: "N/A"
+    };
+
+    home.getData = function () {
+        var url = home.urls.getData.replace('(apiUrl)', home.urls.api);
+        $http.get(url).then(handleData.bind(home), handleError);
     }
 
-    function plotAllTimeData() {
-        $.ajax({
-            url: '/Home/GetAllTimeData',
-            success: buildChart
-        });
-        return true;
+    function handleData(req) {
+        this.data.maxOccupationRate = req.data.MaxOccupationRate;
+        this.data.maxOccupationDate = toJsDate(req.data.MaxOccupationDate).toLocaleString();
+        buildChart(req.data.Data);
     }
 
-    function buildChart(req) {
+    function buildChart(chartData) {
         Chart.defaults.global.defaultFontSize = defineFontSize();
-        var data = req.Data.map(function (chartPoint) {
+        var data = chartData.map(function (chartPoint) {
             return chartPoint.Cars;
         });
-        var labels = req.Data.map(function (chartPoint) {
+        var labels = chartData.map(function (chartPoint) {
             return toJsDate(chartPoint.Date).toLocaleString();
         });
-        //var fontSize = defineFontSize();
-        var ctx = $("#parking-chart");
+        var ctx = document.getElementById("parking-chart");
         var occupationChart = new Chart(ctx, {
             type: 'line',
             responsive: false,
@@ -81,8 +82,11 @@
         }
     }
 
-})(jQuery);
+    function handleError() {
+        debugger;
+    }
+
+}
 
 
-
-
+HomeController.$inject = ['$scope', '$http'];
