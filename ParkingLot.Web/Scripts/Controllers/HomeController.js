@@ -1,4 +1,4 @@
-﻿var HomeController = function ($scope, $http) {
+﻿var HomeController = function ($scope, $http, moment, dateFilter) {
     var home = this;
 
     $scope.init = function (config) {
@@ -11,8 +11,10 @@
     };
 
     home.data = {
-        maxOccupationRate: "N/A",
-        maxOccupationDate: "N/A"
+        maxOccupationRate: 'N/A',
+        maxOccupationDate: 'N/A',
+        startRange: undefined,
+        endRange: undefined
     };
 
     home.getData = function () {
@@ -23,6 +25,8 @@
     function handleData(req) {
         this.data.maxOccupationRate = req.data.MaxOccupationRate;
         this.data.maxOccupationDate = toJsDate(req.data.MaxOccupationDate).toLocaleString();
+        this.data.startRange = moment(req.data.StartDate).toDate();
+        this.data.endRange = moment(req.data.EndDate).toDate();
         buildChart(req.data.Data);
     }
 
@@ -89,4 +93,4 @@
 }
 
 
-HomeController.$inject = ['$scope', '$http'];
+HomeController.$inject = ['$scope', '$http', 'moment', 'dateFilter'];

@@ -6,8 +6,7 @@ namespace ParkingLot.Web {
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles) {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js",
-                        "~/Scripts/jquery.timepicker.min.js"));
+                        "~/Scripts/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -17,6 +16,9 @@ namespace ParkingLot.Web {
 
             bundles.Add(new ScriptBundle("~/bundles/ParkingLotApp")
                 .IncludeDirectory("~/Scripts/Controllers", "*.js")
+                .Include("~/Scripts/moment.min.js")
+                .Include("~/Scripts/datetimepicker.js")
+                .Include("~/Scripts/datetimepicker.templates.js")
                 .Include("~/Scripts/ParkingLotApp.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/chart").Include(
@@ -33,7 +35,7 @@ namespace ParkingLot.Web {
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/jquery.timepicker.min.css",
+                      "~/Content/datetimepicker.css",
                       "~/Content/mobile.css",
                       "~/Content/screen.css"));
         }
