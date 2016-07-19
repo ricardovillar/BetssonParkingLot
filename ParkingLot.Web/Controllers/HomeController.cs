@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using ParkingLot.Web.Data;
 using ParkingLot.Web.Models;
-using ParkingLot.Web.Extensions;
 
 namespace ParkingLot.Web.Controllers {
     public class HomeController : BaseController {
@@ -23,7 +22,7 @@ namespace ParkingLot.Web.Controllers {
         public ActionResult Index() {
             var config = new Config {
                 ApiUrl = ConfigurationManager.AppSettings["ApiUrl"],
-                GetDataUrl = Url.Action("GetData", "Home", new {  apiUrl = "(apiUrl)" }),
+                GetDataUrl = Url.Action("GetData", "Home", new { apiUrl = "(apiUrl)" }),
                 GetPartialDataUrl = Url.Action("GetPartialData", "Home", new { start = "(start)", end = "(end)" }),
                 GetFullDataUrl = Url.Action("GetFullData")
             };
@@ -44,7 +43,7 @@ namespace ParkingLot.Web.Controllers {
             var partialChartData = chartData.Slice(start, end);
             return CreateLargeJsonResponse(partialChartData);
         }
-        
+
         public ContentResult GetFullData() {
             var chartData = GetStoredChartData();
             return CreateLargeJsonResponse(chartData);

@@ -1,4 +1,8 @@
 ﻿var HomeController = function ($scope, $http, moment, dateFilter) {
+    var RequestDateFormat = 'YYYY-MM-DDTHH:mm';
+    var ViewDateFormat = 'DD/MM/YYYY HH:mm';
+    var chartCtx = document.getElementById("parking-chart");
+
     var home = this;
 
     $scope.init = function (config) {
@@ -10,23 +14,63 @@
         };
     };
 
+    $scope.beforeRenderRangeDate = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+        if (home.data.startRange && home.data.endRange) {
+            var startDate = moment(home.data.startRange);
+            var endDate = moment(home.data.endRange);
+            for (var i = 0; i < $dates.length; i++) {
+                var localDate = $dates[i].localDateValue();
+                if (localDate < startDate.valueOf() || localDate > endDate.valueOf()) {
+                    $dates[i].selectable = false;
+                }
+            }
+        }
+    }
+
+    $scope.getPartialData = function () {
+        console.log(newDate);
+        console.log(oldDate);
+    }
+
     home.data = {
         maxOccupationRate: 'N/A',
         maxOccupationDate: 'N/A',
         startRange: undefined,
-        endRange: undefined
+        endRange: undefined,
+        filterStartRange: undefined,
+        filterEndRange: undefined
     };
 
     home.getData = function () {
-        var url = home.urls.getData.replace('(apiUrl)', home.urls.api);
-        $http.get(url).then(handleData.bind(home), handleError);
+        var url = home.urls.getData.replace('(apiUrl)', encodeURIComponent(home.urls.api));
+        requestData.call(this, url, true);
     }
 
-    function handleData(req) {
+    home.getPartialData = function () {
+        var start = moment(home.data.filterStartRange).format(RequestDateFormat);
+        var end = moment(home.data.filterEndRange).format(RequestDateFormat);
+        var url = home.urls.getPartialData.replace('(start)', start).replace('(end)', end);
+        requestData.call(this, url, false);
+    }
+
+    home.restoreFullData = function () {
+        var url = home.urls.getFullData;
+        requestData.call(this, url, true);
+    }
+
+    function requestData(url, updateRange) {
+        $http.get(url).then(handleData.bind(home, updateRange), handleError);
+    }
+
+    function handleData(updateRange, req) {
         this.data.maxOccupationRate = req.data.MaxOccupationRate;
-        this.data.maxOccupationDate = toJsDate(req.data.MaxOccupationDate).toLocaleString();
-        this.data.startRange = moment(req.data.StartDate).toDate();
-        this.data.endRange = moment(req.data.EndDate).toDate();
+        this.data.maxOccupationDate = moment(req.data.MaxOccupationDate).format(ViewDateFormat);
+        if (updateRange) {
+            this.data.startRange = moment(req.data.StartDate).toDate();
+            this.data.endRange = moment(req.data.EndDate).toDate();
+            this.data.filterStartRange = this.data.startRange;
+            this.data.filterEndRange = this.data.endRange;
+        }
         buildChart(req.data.Data);
     }
 
@@ -36,10 +80,14 @@
             return chartPoint.Cars;
         });
         var labels = chartData.map(function (chartPoint) {
-            return toJsDate(chartPoint.Date).toLocaleString();
+            return moment(chartPoint.Date).format(ViewDateFormat);
         });
-        var ctx = document.getElementById("parking-chart");
-        var occupationChart = new Chart(ctx, {
+
+        if (home.occupationChart) {
+            home.occupationChart.destroy();
+        }
+
+        home.occupationChart = new Chart(chartCtx, {
             type: 'line',
             responsive: false,
             data: {

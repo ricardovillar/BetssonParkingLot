@@ -14,7 +14,7 @@
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
                         <li><a href="#" data-toggle="modal" data-target="#getDataModal">Get Data</a></li>
-                        <li><a href="#" id="plotAllTimeData">All Time</a></li>
+                        <li><a href="#" ng-click="home.restoreFullData()">All Time</a></li>
                         <li><a href="#">Select Parking Lot</a></li>
                     </ul>
                 </div>
@@ -26,24 +26,24 @@
         <span class="interval-range-label">Select time range for analysis:</span>
 
         <div class="dropdown">
-            <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
+            <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#" href="#">
                 <div class="input-group datetime-picker-input">
-                    <input type="text" class="form-control" date='MM/dd/yyyy HH:mm' data-ng-model="home.data.startRange" placeholder="Start time"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    <input type="text" class="form-control" date='dd/MM/yyyy HH:mm' data-ng-model="home.data.filterStartRange" placeholder="Start time"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                 </div>
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <datetimepicker data-ng-model="home.data.startRange" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" />
+                <datetimepicker data-ng-model="home.data.filterStartRange" data-datetimepicker-config="{ dropdownSelector: '#dropdownStart' }" data-before-render="beforeRenderRangeDate($view, $dates, $leftDate, $upDate, $rightDate)" data-on-set-time="home.getPartialData()" />
             </ul>
         </div>
 
         <div class="dropdown">
-            <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#">
+            <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#" href="#">
                 <div class="input-group datetime-picker-input">
-                    <input type="text" class="form-control" date='MM/dd/yyyy HH:mm' data-ng-model="home.data.endRange" placeholder="End time"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    <input type="text" class="form-control" date='dd/MM/yyyy HH:mm' data-ng-model="home.data.filterEndRange" placeholder="End time"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                 </div>
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <datetimepicker data-ng-model="home.data.endRange" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }" />
+                <datetimepicker data-ng-model="home.data.filterEndRange" data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd' }" data-before-render="beforeRenderRangeDate($view, $dates, $leftDate, $upDate, $rightDate)" data-on-set-time="home.getPartialData()" />
             </ul>
         </div>
 
