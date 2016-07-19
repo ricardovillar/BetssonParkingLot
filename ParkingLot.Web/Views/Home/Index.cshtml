@@ -1,6 +1,7 @@
 ﻿@using ParkingLot.Web.Extensions;
 @model ParkingLot.Web.Models.Config
 <div ng-controller="HomeController as home" ng-init="init(@Model.ToJson())">
+    <toaster-container></toaster-container>
     <div style="display: block">
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">

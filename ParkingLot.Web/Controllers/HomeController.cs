@@ -6,8 +6,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using ParkingLot.Web.Data;
+using ParkingLot.Web.Filters;
 using ParkingLot.Web.Models;
 
 namespace ParkingLot.Web.Controllers {
@@ -29,6 +31,7 @@ namespace ParkingLot.Web.Controllers {
             return View(config);
         }
 
+        [JsonHandleError]
         public ContentResult GetData(string apiUrl) {
             var tasks = new List<Task<IEnumerable<ParkingRecord>>> { GetDataTask(apiUrl) };
             Task.WaitAll(tasks.ToArray());
@@ -38,15 +41,39 @@ namespace ParkingLot.Web.Controllers {
             return CreateLargeJsonResponse(chartData);
         }
 
+        [JsonHandleError]
         public ContentResult GetPartialData(DateTime start, DateTime end) {
-            var chartData = GetStoredChartData();
-            var partialChartData = chartData.Slice(start, end);
-            return CreateLargeJsonResponse(partialChartData);
+            try {
+                if (start >= end) {
+                    throw new ArgumentOutOfRangeException("start", "Start Date must be before than End Date.");
+                }
+                var chartData = GetStoredChartData();
+                var partialChartData = chartData.Slice(start, end);
+                return CreateLargeJsonResponse(partialChartData);
+            }
+            catch (ArgumentOutOfRangeException ex) {
+                throw new HttpException((int) HttpStatusCode.BadRequest, ex.Message);
+            }
+            catch (InvalidDataException ex) {
+                throw new HttpException((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
+            catch (Exception) {
+                throw new HttpException((int) HttpStatusCode.InternalServerError, "Something went wrong, sorry!");
+            }
         }
 
+        [JsonHandleError]
         public ContentResult GetFullData() {
-            var chartData = GetStoredChartData();
-            return CreateLargeJsonResponse(chartData);
+            try {
+                var chartData = GetStoredChartData();
+                return CreateLargeJsonResponse(chartData);
+            }
+            catch (InvalidDataException ex) {
+                throw new HttpException((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
+            catch (Exception) {
+                throw new HttpException((int) HttpStatusCode.InternalServerError, "Something went wrong, sorry!");
+            }
         }
 
         private void StoreChartData(ChartData chartData) {
@@ -54,20 +81,15 @@ namespace ParkingLot.Web.Controllers {
         }
 
         private ChartData GetStoredChartData() {
-            return (ChartData) Session[ChartDataSessionKey];
+            var chartData = (ChartData) Session[ChartDataSessionKey];
+            if (chartData == null) {
+                throw new InvalidDataException("Data not found.");
+            }
+            return chartData;
         }
-
-        private string RequestData(string url) {
-            var request = WebRequest.Create(url);
-            var stream = request.GetResponse().GetResponseStream();
-            var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
-        }
-
 
         static async Task<IEnumerable<ParkingRecord>> GetDataTask(string url) {
             IEnumerable<ParkingRecord> result = new List<ParkingRecord>();
-
             using (var client = new HttpClient()) {
                 var uri = new Uri(url);
                 client.BaseAddress = new Uri(uri.AbsoluteUri.TrimEnd(uri.Query.ToCharArray()));
@@ -79,7 +101,6 @@ namespace ParkingLot.Web.Controllers {
                     result = await response.Content.ReadAsAsync<IEnumerable<ParkingRecord>>();
                 }
             }
-
             return result;
         }
 

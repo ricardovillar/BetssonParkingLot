@@ -1,4 +1,4 @@
-﻿var ParkingLotApp = angular.module('ParkingLotApp', ['ui.bootstrap.datetimepicker']);
+﻿var ParkingLotApp = angular.module('ParkingLotApp', ['ui.bootstrap.datetimepicker', 'toaster', 'ngAnimate']);
 
 ParkingLotApp.constant("moment", moment);
 

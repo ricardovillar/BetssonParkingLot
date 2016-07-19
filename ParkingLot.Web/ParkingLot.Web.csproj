@@ -152,6 +152,7 @@
     <Compile Include="Data\ChartDataBuilder.cs" />
     <Compile Include="Data\IChartDataBuilder.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
+    <Compile Include="Filters\JsonHandleErrorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -167,12 +168,19 @@
     <Content Include="Content\datetimepicker.css" />
     <Content Include="Content\mobile.css" />
     <Content Include="Content\screen.css" />
+    <Content Include="Content\toaster.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\angular-animate.min.js" />
+    <Content Include="Scripts\angular-mocks.js" />
+    <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\toaster.scss" />
+    <Content Include="Scripts\angular.min.js.map" />
+    <Content Include="Scripts\angular-animate.min.js.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chart.bundle.min.js" />
     <Content Include="Scripts\Controllers\HomeController.js" />
@@ -190,6 +198,7 @@
     <Content Include="Scripts\ParkingLotApp.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\toaster.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

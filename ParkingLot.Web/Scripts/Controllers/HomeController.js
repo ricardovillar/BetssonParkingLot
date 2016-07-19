@@ -1,4 +1,4 @@
-﻿var HomeController = function ($scope, $http, moment, dateFilter) {
+﻿var HomeController = function ($scope, $http, moment, dateFilter, toaster) {
     var RequestDateFormat = 'YYYY-MM-DDTHH:mm';
     var ViewDateFormat = 'DD/MM/YYYY HH:mm';
     var chartCtx = document.getElementById("parking-chart");
@@ -27,11 +27,6 @@
         }
     }
 
-    $scope.getPartialData = function () {
-        console.log(newDate);
-        console.log(oldDate);
-    }
-
     home.data = {
         maxOccupationRate: 'N/A',
         maxOccupationDate: 'N/A',
@@ -47,10 +42,16 @@
     }
 
     home.getPartialData = function () {
-        var start = moment(home.data.filterStartRange).format(RequestDateFormat);
-        var end = moment(home.data.filterEndRange).format(RequestDateFormat);
-        var url = home.urls.getPartialData.replace('(start)', start).replace('(end)', end);
-        requestData.call(this, url, false);
+        if (home.data.filterStartRange && home.data.filterEndRange) {
+            if (home.data.filterStartRange >= home.data.filterEndRange) {
+                showErrorMessage('Invalid Range', 'Start Date must be before than End Date.');
+                return;
+            }
+            var start = moment(home.data.filterStartRange).format(RequestDateFormat);
+            var end = moment(home.data.filterEndRange).format(RequestDateFormat);
+            var url = home.urls.getPartialData.replace('(start)', start).replace('(end)', end);
+            requestData.call(this, url, false);
+        }
     }
 
     home.restoreFullData = function () {
@@ -120,11 +121,6 @@
         });
     }
 
-    function toJsDate(date) {
-        var d = /\/Date\((\d*)\)\//.exec(date);
-        return new Date(+d[1]);
-    }
-
     function defineFontSize() {
         var mq = window.matchMedia("(min-width: 48em)");
         if (mq.matches) {
@@ -134,11 +130,20 @@
         }
     }
 
-    function handleError() {
-        debugger;
+    function handleError(response) {
+        showErrorMessage(response.statusText, response.data);
+    }
+
+    function showErrorMessage(title, message, timeout) {
+        toaster.pop({
+            type: 'error',
+            title: title,
+            body: message,
+            timeout: timeout
+        });
     }
 
 }
 
 
-HomeController.$inject = ['$scope', '$http', 'moment', 'dateFilter'];
+HomeController.$inject = ['$scope', '$http', 'moment', 'dateFilter', 'toaster'];

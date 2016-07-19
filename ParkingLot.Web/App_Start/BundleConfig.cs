@@ -11,14 +11,16 @@ namespace ParkingLot.Web {
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
-                "~/Scripts/angular.min.js"));
+            bundles.Add(new ScriptBundle("~/bundles/angular")
+                .Include("~/Scripts/angular.min.js")
+                .Include("~/Scripts/angular-animate.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/ParkingLotApp")
                 .IncludeDirectory("~/Scripts/Controllers", "*.js")
                 .Include("~/Scripts/moment.min.js")
                 .Include("~/Scripts/datetimepicker.js")
                 .Include("~/Scripts/datetimepicker.templates.js")
+                .Include("~/Scripts/toaster.min.js")
                 .Include("~/Scripts/ParkingLotApp.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/chart").Include(
@@ -36,6 +38,7 @@ namespace ParkingLot.Web {
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/datetimepicker.css",
+                      "~/Content/toaster.min.css",
                       "~/Content/mobile.css",
                       "~/Content/screen.css"));
         }
