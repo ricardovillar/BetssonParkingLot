@@ -16,9 +16,6 @@ namespace ParkingLot.Web.Data {
                             .Distinct()
                             .ToList();
 
-            var topOcuppationCars = parkData.Values.Max();
-            var topOccupationTime = parkData.First(x => x.Value == topOcuppationCars).Key;
-
             return new ChartData(points);
         }        
 
