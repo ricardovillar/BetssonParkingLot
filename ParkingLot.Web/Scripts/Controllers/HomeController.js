@@ -59,6 +59,10 @@
         requestData.call(this, url, true);
     }
 
+    home.selectParkingLot = function () {
+        showInfoMessage('Ooops ...', 'This feature is not avaible yet, but it is coming soon!');
+    }
+
     function requestData(url, updateRange) {
         $http.get(url).then(handleData.bind(home, updateRange), handleError);
     }
@@ -135,8 +139,16 @@
     }
 
     function showErrorMessage(title, message, timeout) {
+        showMessage('error', title, message, timeout);
+    }
+
+    function showInfoMessage(title, message, timeout) {
+        showMessage('info', title, message, timeout);
+    }
+
+    function showMessage(type, title, message, timeout) {
         toaster.pop({
-            type: 'error',
+            type: type,
             title: title,
             body: message,
             timeout: timeout
