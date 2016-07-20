@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ParkingLot.Web.Data;
@@ -16,9 +12,11 @@ namespace ParkingLot.Web.Controllers {
     public class HomeController : BaseController {
         private static string ChartDataSessionKey = "ChartData";
         private readonly IChartDataBuilder _chartDataBuilder;
+        private readonly IApiService _apiService;
 
-        public HomeController(IChartDataBuilder chartDataBuilder) {
+        public HomeController(IChartDataBuilder chartDataBuilder, IApiService apiService) {
             _chartDataBuilder = chartDataBuilder;
+            _apiService = apiService;
         }
 
         public ActionResult Index() {
@@ -33,12 +31,15 @@ namespace ParkingLot.Web.Controllers {
 
         [JsonHandleError]
         public ContentResult GetData(string apiUrl) {
-            var tasks = new List<Task<IEnumerable<ParkingRecord>>> { GetDataTask(apiUrl) };
-            Task.WaitAll(tasks.ToArray());
-            var records = tasks[0].Result;
-            var chartData = _chartDataBuilder.Build(records);
-            StoreChartData(chartData);
-            return CreateLargeJsonResponse(chartData);
+            try {
+                var records = _apiService.LoadData(apiUrl);
+                var chartData = _chartDataBuilder.Build(records);
+                StoreChartData(chartData);
+                return CreateLargeJsonResponse(chartData);
+            }
+            catch (Exception) {
+                throw new HttpException((int) HttpStatusCode.InternalServerError, "Something went wrong, sorry!");
+            }
         }
 
         [JsonHandleError]
@@ -87,23 +88,5 @@ namespace ParkingLot.Web.Controllers {
             }
             return chartData;
         }
-
-        static async Task<IEnumerable<ParkingRecord>> GetDataTask(string url) {
-            IEnumerable<ParkingRecord> result = new List<ParkingRecord>();
-            using (var client = new HttpClient()) {
-                var uri = new Uri(url);
-                client.BaseAddress = new Uri(uri.AbsoluteUri.TrimEnd(uri.Query.ToCharArray()));
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = client.GetAsync(uri.Query).Result;
-                if (response.IsSuccessStatusCode) {
-                    result = await response.Content.ReadAsAsync<IEnumerable<ParkingRecord>>();
-                }
-            }
-            return result;
-        }
-
-
     }
 }

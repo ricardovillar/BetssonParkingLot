@@ -149,8 +149,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Data\ChartDataBuilder.cs" />
-    <Compile Include="Data\IChartDataBuilder.cs" />
+    <Compile Include="Data\Builders\ChartDataBuilder.cs" />
+    <Compile Include="Data\Services\ApiService.cs" />
+    <Compile Include="Data\Services\IApiService.cs" />
+    <Compile Include="Data\Builders\IChartDataBuilder.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Filters\JsonHandleErrorAttribute.cs" />
     <Compile Include="Global.asax.cs">
